@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Work To Create</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #d3d3d3;
+    }
+
+    header {
+      background: #626f78;
+      color: white;
+      text-align: center;
+      padding: 8px;
+      font-size: 1.5em;
+      font-weight: bold;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .header-logo {
+        height: 70px;
+        margin-top: 8px;
+        right: 1px;
+    }
+
+    .btn-cart {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .btn-cart img {
+      width: 28px;
+      height: 28px;
+    }
+
+    #home {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      padding: 5px;
+    }
+
+    .product {
+      background: #626f78;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .product:hover {
+      transform: translateY(-5px);
+    }
+
+    .product img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+    }
+
+    .product h3 {
+      margin: 10px;
+      font-size: 1.1em;
+      color: white;
+    }
+
+    #detail {
+      display: none;
+      padding: 20px;
+      padding-bottom: 120px;
+    }
+    
+    #cart-view {
+      display: none;
+      padding: 12px;
+    }
+
+    .cart-product {
+      display: flex;
+      background: #626f78;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 10px;
+      color: white;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .cart-product-checkbox {
+      margin-right: 10px;
+      align-self: flex-start;
+      margin-top: 35px;
+    }
+    
+    .cart-product img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      margin-right: 15px;
+    }
+    
+    .cart-product-details {
+      padding: 10px;
+      flex-grow: 1;
+    }
+
+    .cart-product-details h3 {
+      margin: 0;
+      font-size: 1.1em;
+    }
+
+    .cart-product-details p {
+      margin: 5px 0 0;
+      font-size: 0.9em;
+    }
+    
+    .btn-delete {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    #detail h2 {
+      margin-top: 5px;
+    }
+
+    #detail p {
+      color: #444;
+      line-height: 1.5;
+    }
+
+    .btn {
+      display: inline-block;
+      margin: 10px 5px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1em;
+    }
+    .btn-back {
+      background: #283a47;
+      color: white;
+    }
+
+    .btn-buy-voucher {
+        background: #f12b2c;
+        color: white;
+        text-align: right;
+        flex-grow: 1;
+        margin: 0;
+        border: none;
+        padding: 15px;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 1em;
+    }
+    
+    .btn-add-to-cart {
+      background: #626f78;
+      color: white;
+      font-weight: bold;
+      flex-grow: 1;
+      margin: 0;
+      border: none;
+      padding: 15px;
+      border-radius: 5px 0 0 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .btn-add-to-cart img {
+        height: 20px;
+        width: 20px;
+    }
+
+    .btn-pesan-sekarang {
+        background: #25d366;
+        color: white;
+        width: 100%;
+        margin-top: 20px;
+    }
+    
+    .main-detail-photo {
+        width: 100%;
+        max-height: 400px;
+        object-fit: contain;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+    }
+
+    .thumbnail-container {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+
+    .thumbnail {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 5px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: 0.2s;
+    }
+
+    .thumbnail.active {
+      border-color: #f12b2c;
+    }
+
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 1.2em;
+      margin-right: 15px;
+    }
+    
+    .quantity-btn {
+      background: #283a47;
+      color: white;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .quantity-input {
+        width: 40px;
+        text-align: center;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 5px;
+    }
+    
+    .cart-item-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      margin-left: auto;
+    }
+    
+    .cart-quantity-control {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    #detail-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 15px 20px;
+        background: #d3d3d3;
+        box-sizing: border-box;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    #detail-button-group {
+        display: flex;
+        flex-grow: 1;
+    }
+
+    /* Gaya untuk Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      padding-top: 60px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0,0.9);
+    }
+
+    .lightbox-content {
+      margin: auto;
+      display: block;
+      width: 90%;
+      max-width: 700px;
+    }
+
+    .close {
+      position: absolute;
+      top: 15px;
+      right: 35px;
+      color: #f1f1f1;
+      font-size: 40px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #bbb;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+      <img src="https://iili.io/KB7uA2n.md.png" alt="Work To Create Logo" class="header-logo">
+      <p>Work To Create</p>
+      <button class="btn-cart" onclick="showCart()">
+          <img src="https://iili.io/KB7Hwve.th.png" alt="Keranjang">
+      </button>
+  </header>
+
+  <section id="home"></section>
+
+  <section id="detail">
+    <button class="btn btn-back" onclick="goHome()">← Kembali</button>
+    <div id="detail-content"></div>
+  </section>
+
+  <section id="cart-view">
+    <h2>Keranjang Belanja</h2>
+    <div id="cart-items">
+      <p>Keranjang Anda kosong.</p>
+    </div>
+    <div id="cart-actions">
+        <button class="btn btn-pesan-sekarang" id="btn-pesan-semua" onclick="pesanSemuaProduk()">Pesan Sekarang</button>
+        <button class="btn btn-pesan-sekarang" id="btn-pesan-terpilih" style="display: none;" onclick="pesanProdukTerpilih()">Pesan Produk Terpilih</button>
+    </div>
+    <button class="btn btn-back" onclick="goHome()">← Kembali</button>
+  </section>
+
+  <div id="myLightbox" class="lightbox" onclick="closeLightbox()">
+    <span class="close">&times;</span>
+    <img class="lightbox-content" id="lightbox-image">
+  </div>
+
+  <script>
+    const products = [
+      {
+        name: "Bedroom",
+        desc: "Desain kamar modern dengan finishing kayu dan pencahayaan elegan.",
+        img: ["https://iili.io/KB5ffXs.md.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg"]
+      },
+      {
+        name: "Living Room",
+        desc: "Kamar minimalis dengan material kayu dan konsep clean.",
+        img: ["https://i.ibb.co.com/zhnmjWy8/342cb0d9-1f22-4988-8760-bcece60d11b6.jpg", "https://i.ibb.co.com/zhnmjWy8/342cb0d9-1f22-4988-8760-bcece60d11b6.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg"]
+      },
+      {
+        name: "Workspace Minimalis",
+        desc: "Ruang kerja nyaman dengan meja kayu dan rak minimalis.",
+        img: ["https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg"]
+      },
+      {
+        name: "Meja & Rak Dinding",
+        desc: "Set meja dengan rak dinding kayu natural modern.",
+        img: ["https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg"]
+      },
+      {
+        name: "Dapur Modern",
+        desc: "Dapur modern full set dengan material premium dan kitchen set lengkap.",
+        img: ["https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg"]
+      },
+      {
+        name: "Dapur Modern",
+        desc: "Dapur modern full set dengan material premium dan kitchen set lengkap.",
+        img: ["https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg"]
+      },
+      {
+        name: "Bedroom",
+        desc: "Desain kamar modern dengan finishing kayu dan pencahayaan elegan.",
+        img: ["https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg"]
+      },
+      {
+        name: "Living Room",
+        desc: "Kamar minimalis dengan material kayu dan konsep clean.",
+        img: ["https://i.ibb.co.com/zhnmjWy8/342cb0d9-1f22-4988-8760-bcece60d11b6.jpg", "https://i.ibb.co.com/zhnmjWy8/342cb0d9-1f22-4988-8760-bcece60d11b6.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg"]
+      },
+      {
+        name: "Workspace Minimalis",
+        desc: "Ruang kerja nyaman dengan meja kayu dan rak minimalis.",
+        img: ["https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg"]
+      },
+      {
+        name: "Meja & Rak Dinding",
+        desc: "Set meja dengan rak dinding kayu natural modern.",
+        img: ["https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg"]
+      },
+      {
+        name: "Dapur Modern",
+        desc: "Dapur modern full set dengan material premium dan kitchen set lengkap.",
+        img: ["https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg"]
+      },
+      {
+        name: "Dapur Modern",
+        desc: "Dapur modern full set dengan material premium dan kitchen set lengkap.",
+        img: ["https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg"]
+      },
+      {
+        name: "Bedroom",
+        desc: "Desain kamar modern dengan finishing kayu dan pencahayaan elegan.",
+        img: ["https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg"]
+      },
+      {
+        name: "Living Room",
+        desc: "Kamar minimalis dengan material kayu dan konsep clean.",
+        img: ["https://i.ibb.co.com/zhnmjWy8/342cb0d9-1f22-4988-8760-bcece60d11b6.jpg", "https://i.ibb.co.com/zhnmjWy8/342cb0d9-1f22-4988-8760-bcece60d11b6.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg"]
+      },
+      {
+        name: "Workspace Minimalis",
+        desc: "Ruang kerja nyaman dengan meja kayu dan rak minimalis.",
+        img: ["https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg"]
+      },
+      {
+        name: "Meja & Rak Dinding",
+        desc: "Set meja dengan rak dinding kayu natural modern.",
+        img: ["https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg"]
+      },
+      {
+        name: "Dapur Modern",
+        desc: "Dapur modern full set dengan material premium dan kitchen set lengkap.",
+        img: ["https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg"]
+      },
+      {
+        name: "Dapur Modern",
+        desc: "Dapur modern full set dengan material premium dan kitchen set lengkap.",
+        img: ["https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg", "https://i.ibb.co.com/XkNvsjF0/922ea178-49a7-496b-aa8c-7f19d6f7f968.jpg"]
+      }
+    ];
+
+    const homeDiv = document.getElementById("home");
+    const detailDiv = document.getElementById("detail");
+    const detailContent = document.getElementById("detail-content");
+    const cartViewDiv = document.getElementById("cart-view");
+    const cartItemsDiv = document.getElementById("cart-items");
+    const btnPesanSemua = document.getElementById("btn-pesan-semua");
+    const btnPesanTerpilih = document.getElementById("btn-pesan-terpilih");
+
+    const cart = [];
+
+    // Tampilkan semua produk
+    products.forEach((p, i) => {
+      const card = document.createElement("div");
+      card.className = "product";
+      card.onclick = () => showDetail(i);
+      card.innerHTML = `
+        <img src="${p.img[0]}" alt="${p.name}">
+        <h3>${p.name}</h3>
+      `;
+      homeDiv.appendChild(card);
+    });
+
+    function showDetail(index) {
+      const p = products[index];
+
+      detailContent.innerHTML = `
+        <img id="main-detail-photo" class="main-detail-photo" src="${p.img[0]}" alt="${p.name}" onclick="openLightbox(this.src)">
+        <div class="thumbnail-container">
+          ${p.img.map((src, idx) => `
+            <img class="thumbnail ${idx === 0 ? 'active' : ''}" src="${src}" alt="${p.name} - ${idx + 1}" onclick="changeMainPhoto('${src}', this)">
+          `).join("")}
+        </div>
+        
+        <h2>${p.name}</h2>
+        <p>${p.desc}</p>
+        
+      `;
+      
+      const detailActions = document.createElement('div');
+      detailActions.id = 'detail-actions';
+      detailActions.innerHTML = `
+        <div class="quantity-control">
+            <button class="quantity-btn" onclick="updateQuantity(-1)">-</button>
+            <span id="quantity">1</span>
+            <button class="quantity-btn" onclick="updateQuantity(1)">+</button>
+        </div>
+        <div id="detail-button-group">
+            <button class="btn btn-add-to-cart" onclick="addToCart(${index})">
+                <img src="https://iili.io/KB7Hwve.th.png" alt="cart">
+                Masukkan Keranjang
+            </button>
+            <button class="btn btn-buy-voucher" onclick="pesanWA('${p.name}', document.getElementById('quantity').innerText)">Pesan Sekarang</button>
+        </div>
+      `;
+      document.body.appendChild(detailActions);
+
+      homeDiv.style.display = "none";
+      detailDiv.style.display = "block";
+      cartViewDiv.style.display = "none";
+    }
+
+    function changeMainPhoto(src, clickedThumbnail) {
+        const mainPhoto = document.getElementById('main-detail-photo');
+        mainPhoto.src = src;
+
+        const allThumbnails = document.querySelectorAll('.thumbnail');
+        allThumbnails.forEach(thumbnail => thumbnail.classList.remove('active'));
+        clickedThumbnail.classList.add('active');
+    }
+
+    function updateQuantity(change) {
+        const quantityEl = document.getElementById(`quantity`);
+        let quantity = parseInt(quantityEl.innerText);
+        quantity += change;
+        if (quantity < 1) quantity = 1;
+        quantityEl.innerText = quantity;
+    }
+
+    function goHome() {
+      detailDiv.style.display = "none";
+      cartViewDiv.style.display = "none";
+      homeDiv.style.display = "grid";
+      const detailActions = document.getElementById('detail-actions');
+      if (detailActions) {
+          detailActions.remove();
+      }
+      closeLightbox();
+    }
+
+    function showCart() {
+      homeDiv.style.display = "none";
+      detailDiv.style.display = "none";
+      cartViewDiv.style.display = "block";
+      const detailActions = document.getElementById('detail-actions');
+      if (detailActions) {
+          detailActions.remove();
+      }
+      closeLightbox();
+      renderCart();
+    }
+
+    function renderCart() {
+      if (cart.length === 0) {
+        cartItemsDiv.innerHTML = "<p>Keranjang Anda kosong.</p>";
+        btnPesanSemua.style.display = 'none';
+        btnPesanTerpilih.style.display = 'none';
+      } else {
+        const listHtml = cart.map((item, index) => `
+          <div class="cart-product">
+            <input type="checkbox" class="cart-item-checkbox" data-index="${index}" onchange="updateCartButtons()">
+            <img src="${item.product.img[0]}" alt="${item.product.name}">
+            <div class="cart-product-details">
+              <h3>${item.product.name}</h3>
+              <p>${item.product.desc}</p>
+            </div>
+            <div class="cart-item-actions">
+              <div class="cart-quantity-control">
+                  <button class="quantity-btn" onclick="updateCartQuantity(${index}, -1)">-</button>
+                  <span id="cart-quantity-${index}">${item.quantity}</span>
+                  <button class="quantity-btn" onclick="updateCartQuantity(${index}, 1)">+</button>
+              </div>
+              <button class="btn-delete" onclick="removeFromCart(${index})">Hapus</button>
+            </div>
+          </div>
+        `).join("");
+        cartItemsDiv.innerHTML = listHtml;
+        updateCartButtons();
+      }
+    }
+
+    function updateCartButtons() {
+        const checkboxes = document.querySelectorAll('.cart-item-checkbox');
+        const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+
+        if (checkedCount > 0) {
+            btnPesanSemua.style.display = 'none';
+            btnPesanTerpilih.style.display = 'block';
+        } else {
+            btnPesanSemua.style.display = 'block';
+            btnPesanTerpilih.style.display = 'none';
+        }
+    }
+
+    function updateCartQuantity(index, change) {
+        let newQuantity = cart[index].quantity + change;
+        if (newQuantity < 1) newQuantity = 1;
+        cart[index].quantity = newQuantity;
+        renderCart();
+    }
+
+    function addToCart(productIndex) {
+      const selectedProduct = products[productIndex];
+      const quantityEl = document.getElementById(`quantity`);
+      const quantity = parseInt(quantityEl.innerText);
+
+      const existingCartItem = cart.find(item => item.product.name === selectedProduct.name);
+
+      if (existingCartItem) {
+          existingCartItem.quantity += quantity;
+      } else {
+          cart.push({ product: selectedProduct, quantity: quantity });
+      }
+
+      alert(`${quantity} ${selectedProduct.name} telah ditambahkan ke keranjang!`);
+      console.log("Isi Keranjang:", cart);
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        renderCart();
+        alert("Produk berhasil dihapus dari keranjang.");
+    }
+
+    function pesanSemuaProduk() {
+        const phone = "6283844641151";
+        const checkboxes = document.querySelectorAll('.cart-item-checkbox:checked');
+        if (cart.length === 0) {
+            alert("Keranjang Anda kosong.");
+            return;
+        }
+        if (checkboxes.length === 0) {
+            alert("Silakan pilih produk yang ingin Anda pesan.");
+            return;
+        }
+
+        let text = "Halo, saya ingin memesan produk berikut:\n\n";
+        cart.forEach((item, index) => {
+            text += `${index + 1}. *${item.product.name}* (${item.quantity} buah)\n`;
+        });
+        text += "\nTerima kasih.";
+        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank");
+    }
+    
+    function pesanProdukTerpilih() {
+        const phone = "6283844641151";
+        const checkboxes = document.querySelectorAll('.cart-item-checkbox:checked');
+        if (checkboxes.length === 0) {
+            alert("Silakan pilih produk yang ingin Anda pesan.");
+            return;
+        }
+        let text = "Halo, saya ingin memesan produk berikut:\n\n";
+        checkboxes.forEach((cb, index) => {
+            const productIndex = parseInt(cb.getAttribute('data-index'));
+            const item = cart[productIndex];
+            text += `${index + 1}. *${item.product.name}* (${item.quantity} buah)\n`;
+        });
+        text += "\nTerima kasih.";
+        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank");
+    }
+
+    function pesanWA(nama, quantity) {
+      const phone = "6283844641151";
+      const text = `Halo, kak. Saya tertarik dengan produk *${nama}* sebanyak ${quantity} buah dan ingin memesan.`;
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank");
+    }
+    
+    function openLightbox(src) {
+        const lightbox = document.getElementById('myLightbox');
+        const lightboxImage = document.getElementById('lightbox-image');
+        lightbox.style.display = "block";
+        lightboxImage.src = src;
+    }
+
+    function closeLightbox() {
+        const lightbox = document.getElementById('myLightbox');
+        lightbox.style.display = "none";
+    }
+  </script>
+
+</body>
+</html>
